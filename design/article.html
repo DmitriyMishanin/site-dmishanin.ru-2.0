@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Введение в React Hooks | dmishanin.ru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="transition-colors duration-200">
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 backdrop-blur-sm">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold accent-text">
+                        dmishanin.ru
+                    </a>
+                    <div class="ml-12 hidden md:flex space-x-6 desktop-menu">
+                        <a href="#about">О портале</a>
+                        <a href="#projects">Проекты</a>
+                        <a href="#articles">Статьи</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <button id="theme-toggle" class="p-2 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </button>
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <button id="login-button" class="px-4 py-2 rounded-full">
+                        Войти
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Мобильное меню -->
+            <div id="mobile-menu" class="mobile-menu hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#about">О портале</a>
+                    <a href="#projects">Проекты</a>
+                    <a href="#articles">Статьи</a>
+                    <a href="/login" class="px-4 py-2 rounded-full text-white text-center mobile-login-button">
+                        Войти
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Article Content -->
+    <main class="container mx-auto px-6 pt-24 pb-16">
+        <!-- Article Header -->
+        <div class="container mx-auto px-6 mb-12">
+            <div class="flex items-center space-x-4 mb-6">
+                <a href="/" class="text-gray-600 hover:text-indigo-600 dark:text-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                </a>
+                <span class="text-gray-400 dark:text-gray-500">/</span>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 dark:text-gray-400">Статьи</a>
+            </div>
+            <h1 class="text-4xl font-bold article-title mb-4">Введение в React Hooks</h1>
+            <div class="flex items-center space-x-4 article-meta">
+                <span class="role-badge role-core">Автор</span>
+                <span>01.04.2024</span>
+                <span>•</span>
+                <span>15 мин чтения</span>
+            </div>
+        </div>
+
+        <!-- Article Content -->
+        <div class="prose prose-lg dark:prose-invert container mx-auto px-6 mb-16">
+            <p>Детальный обзор хуков в React и примеры их использования. В этой статье мы рассмотрим основные концепции...</p>
+            
+            <h2>Что такое React Hooks?</h2>
+            <p>React Hooks — это функции, которые позволяют использовать состояние и другие возможности React...</p>
+            
+            <pre><code class="language-javascript">import React, { useState } from 'react';
+
+function Example() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>Вы кликнули {count} раз</p>
+      <button onClick={() => setCount(count + 1)}>
+        Нажми меня
+      </button>
+    </div>
+  );
+}</code></pre>
+        </div>
+
+        <!-- Article Navigation -->
+        <div class="container mx-auto px-6 border-t border-b border-gray-200 dark:border-gray-800 py-8 mb-16">
+            <div class="grid grid-cols-2 gap-8">
+                <a href="#" class="group">
+                    <span class="text-sm text-gray-500 dark:text-gray-400 mb-2 block">Предыдущая статья</span>
+                    <div class="text-lg font-semibold article-navigation-title group-hover:text-indigo-600">
+                        Docker в продакшене
+                    </div>
+                </a>
+                <a href="#" class="group text-right">
+                    <span class="text-sm text-gray-500 dark:text-gray-400 mb-2 block">Следующая статья</span>
+                    <div class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600">
+                        Node.js для начинающих
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Comments Section -->
+        <div class="container mx-auto px-6">
+            <h3 class="text-2xl font-bold comment-section-title mb-8">Комментарии</h3>
+            
+            <!-- Comment Form -->
+            <form class="mb-12">
+                <textarea 
+                    class="w-full p-4 rounded-lg comment-input"
+                    rows="4"
+                    placeholder="Оставьте комментарий..."
+                ></textarea>
+                <button class="mt-4 px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    Отправить
+                </button>
+            </form>
+
+            <!-- Comments List -->
+            <div class="space-y-8">
+                <div class="flex space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-800"></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2 mb-2">
+                            <span class="font-semibold text-gray-900 dark:text-white">Иван Петров</span>
+                            <span class="text-sm text-gray-500">2 часа назад</span>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Отличная статья! Очень подробно объяснили концепцию хуков.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 py-6">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">О dmishanin.ru</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Персональный мини-портал dmishanin.ru. Пространство для обмена идеями и знаниями с близкими по духу людьми.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Навигация</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                        <li><a href="#" class="hover:text-indigo-600">Главная</a></li>
+                        <li><a href="#about" class="hover:text-indigo-600">О портале</a></li>
+                        <li><a href="#projects" class="hover:text-indigo-600">Проекты</a></li>
+                        <li><a href="#articles" class="hover:text-indigo-600">Статьи</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Ресурсы</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                        <li>
+                            <a href="https://redmine.dmishanin.ru" class="hover:text-indigo-600 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                redmine.dmishanin.ru
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wiki.dmishanin.ru" class="hover:text-indigo-600 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                                wiki.dmishanin.ru
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://chat.dmishanin.ru" class="hover:text-indigo-600 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                chat.dmishanin.ru
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://uptime.dmishanin.ru" class="hover:text-indigo-600 flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                                uptime.dmishanin.ru
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Контакты</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-400">
+                        <li>Email: contact@dmishanin.ru</li>
+                        <li>Telegram: @dmishaninbot</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center text-gray-500 dark:text-gray-400 text-sm border-t border-gray-200 dark:border-gray-800 pt-8">
+                <p>&copy; 2025 dmishanin.ru. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle and Modal Script -->
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        });
+
+        // Modal Handling
+        const modal = document.getElementById('login-modal');
+        const loginButton = document.getElementById('login-button');
+        const closeButton = modal.querySelector('.close-modal');
+
+        loginButton.addEventListener('click', () => {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Prevent form submission (demo purposes)
+        const loginForm = modal.querySelector('form');
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Add your login logic here
+            alert('Форма входа отправлена (демо)');
+        });
+
+        // Мобильное меню
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

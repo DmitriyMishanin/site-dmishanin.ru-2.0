@@ -1,0 +1,691 @@
+/* 
+ * Оптимизированные стили с использованием CSS-переменных
+ */
+:root {
+    /* Цветовая схема - светлая тема */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-hover: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --text-muted: #9ca3af;
+    --accent-primary: #4338ca;
+    --accent-secondary: #3730a3;
+    --accent-light: #818CF8;
+    --accent-lightest: #a5b4fc;
+    --border-light: #e5e7eb;
+    --border-lighter: #f0f0f0;
+    --shadow-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    --badge-admin: #EF4444;
+    --badge-core: #3B82F6;
+    --badge-member: #10B981;
+    --badge-premium: #F59E0B;
+}
+
+.dark {
+    /* Цветовая схема - темная тема */
+    --bg-primary: #1f2937;
+    --bg-secondary: #111827;
+    --bg-hover: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #9ca3af;
+    --text-tertiary: #6b7280;
+    --text-muted: #4b5563;
+    --accent-primary: #818CF8;
+    --accent-secondary: #4f46e5;
+    --accent-light: #a5b4fc;
+    --accent-lightest: #c7d2fe;
+    --border-light: #374151;
+    --border-lighter: #1f2937;
+    --shadow-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Базовые стили */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+}
+
+p {
+    color: var(--text-secondary);
+}
+
+a {
+    color: var(--accent-primary);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-secondary);
+}
+
+.text-gray-400 {
+    color: var(--text-tertiary);
+}
+
+.text-gray-500 {
+    color: var(--text-muted);
+}
+
+.text-gray-600 {
+    color: var(--text-secondary);
+}
+
+.text-gray-900 {
+    color: var(--text-primary);
+}
+
+.text-indigo-600 {
+    color: var(--accent-primary) !important;
+}
+
+.text-indigo-600:hover {
+    color: var(--accent-secondary) !important;
+}
+
+.bg-white {
+    background-color: var(--bg-primary);
+}
+
+.bg-gray-800 {
+    background-color: var(--bg-secondary);
+}
+
+.border-gray-200 {
+    border-color: var(--border-light);
+}
+
+.hover\:bg-gray-50:hover {
+    background-color: var(--bg-secondary);
+}
+
+.accent-text {
+    color: var(--accent-primary);
+}
+
+/* Стили для градиентного круга и изображения */
+.gradient-circle {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 570px;
+    height: 570px;
+    background: radial-gradient(circle, #4F46E5 0%, #818CF8 100%);
+    border-radius: 50%;
+    opacity: 0.9;
+    z-index: -1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.gradient-circle img {
+    width: 95%;
+    height: 95%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Компоненты */
+.btn-primary {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--bg-hover);
+    box-shadow: var(--shadow-sm);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+}
+
+.role-admin { background-color: var(--badge-admin); }
+.role-core { background-color: var(--badge-core); }
+.role-member { background-color: var(--badge-member); }
+.role-premium { background-color: var(--badge-premium); }
+
+.quote-epigraph {
+    max-width: 500px;
+    font-style: italic;
+    position: relative;
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.quote-epigraph::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--accent-primary), var(--accent-light));
+    border-radius: 3px;
+}
+
+.quote-epigraph p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.quote-epigraph cite {
+    color: var(--accent-primary);
+    font-size: 0.85rem;
+}
+
+/* Мобильное меню */
+.mobile-menu {
+    display: none;
+}
+
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    backdrop-filter: blur(4px);
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--bg-primary);
+    margin: 15vh auto;
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 1rem;
+    box-shadow: var(--shadow-xl);
+    color: var(--text-primary);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+}
+
+/* Стили для полей ввода в модальном окне */
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content input[type="text"] {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.modal-content input[type="checkbox"] {
+    background-color: var(--bg-primary);
+    border-color: var(--border-light);
+}
+
+/* Стили для лейблов в модальном окне */
+.modal-content label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Стиль для дополнительного текста в форме */
+.modal-content .text-center span {
+    color: var(--text-primary);
+}
+
+/* Стили для карточек */
+.card {
+    background-color: var(--bg-primary);
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-lighter);
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-light);
+}
+
+.card h3 {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.card p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.card .date {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.card-link {
+    color: var(--accent-primary);
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.card-link:hover {
+    color: var(--accent-secondary);
+}
+
+/* Специальные стили для карточек в разделах статей и проектов */
+#articles .card, 
+#projects .card {
+    background-color: var(--bg-primary);
+}
+
+#articles .card:hover, 
+#projects .card:hover {
+    background-color: var(--bg-hover);
+}
+
+/* Заголовки секций */
+.section-title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: var(--text-primary);
+}
+
+/* Улучшение раздела полезных ссылок */
+#useful-links .group {
+    transition: all 0.3s ease;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+#useful-links .group a {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-lighter);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+#useful-links .group a:hover {
+    background-color: var(--bg-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+#useful-links h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+}
+
+#useful-links p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+#useful-links .group:hover h3.group-hover\:text-indigo-600 {
+    color: var(--accent-primary) !important;
+}
+
+#useful-links .group svg {
+    color: var(--accent-primary);
+}
+
+/* Социальные сети */
+#social a {
+    transition: all 0.3s ease;
+    opacity: 0.85;
+    color: var(--text-secondary);
+}
+
+#social a:hover {
+    opacity: 1;
+    color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+#social svg {
+    transition: all 0.3s ease;
+}
+
+#social a:hover svg {
+    color: var(--accent-primary);
+}
+
+/* Подвал */
+footer {
+    background-color: var(--bg-primary);
+    border-top: 1px solid var(--border-lighter);
+}
+
+footer h3 {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+footer p, footer li {
+    color: var(--text-secondary);
+}
+
+/* Hero секция */
+.hero-content h1 {
+    color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.hero-content p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+.hero-content .accent-text {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+.hero-buttons a.btn-primary {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-weight: 500;
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.hero-buttons a.btn-primary:hover {
+    background-color: var(--bg-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+/* About section */
+#about {
+    background-color: transparent;
+    border-radius: 0;
+    padding: 2rem 0;
+    box-shadow: none;
+    border: none;
+}
+
+#about .text-gray-600 {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+#about ul.list-disc li {
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+#about ul.list-disc li::marker {
+    color: var(--accent-primary);
+}
+
+main.container {
+    background-color: transparent;
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+/* Верхнее меню */
+header {
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-lighter);
+    box-shadow: var(--shadow-sm);
+}
+
+header nav a {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+header nav a:hover {
+    color: var(--text-primary);
+}
+
+header nav .accent-text {
+    color: var(--accent-primary);
+    font-weight: 700;
+}
+
+header button#login-button {
+    background-color: var(--accent-primary);
+    color: white;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border: none;
+}
+
+header button#login-button:hover {
+    background-color: var(--accent-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(67, 56, 202, 0.2), 0 2px 4px -1px rgba(67, 56, 202, 0.1);
+}
+
+/* Кнопка входа в мобильном меню */
+.mobile-login-button {
+    background-color: var(--accent-primary);
+    color: white;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.mobile-login-button:hover {
+    background-color: var(--accent-secondary);
+}
+
+/* Кнопка переключения темы */
+#theme-toggle {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+#theme-toggle:hover {
+    background-color: var(--bg-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#theme-toggle svg {
+    color: var(--text-secondary);
+}
+
+/* Кнопка мобильного меню */
+#mobile-menu-button {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+#mobile-menu-button:hover {
+    background-color: var(--bg-hover);
+}
+
+#mobile-menu-button svg {
+    color: var(--text-secondary);
+}
+
+/* Стили для контента статьи */
+.prose {
+    max-width: 120ch;
+    color: var(--text-secondary);
+}
+
+.prose h2 {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.prose p {
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+}
+
+.prose pre {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+}
+
+.prose code {
+    font-family: monospace;
+    color: var(--accent-primary);
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+    .gradient-circle {
+        position: relative;
+        width: 280px;
+        height: 280px;
+        top: auto;
+        right: auto;
+        margin: 1rem auto;
+    }
+    
+    .gradient-circle img {
+        width: 90%;
+        height: 90%;
+        border-width: 2px;
+    }
+    
+    .hero-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-content {
+        text-align: center;
+        padding: 0 1rem;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .quote-epigraph {
+        max-width: 100%;
+        font-size: 0.9rem;
+    }
+    
+    .mobile-menu {
+        display: block;
+    }
+    
+    .desktop-menu {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .prose {
+        max-width: 120ch;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .max-w-3xl {
+        max-width: 80rem;
+    }
+}
+
+/* Стили для статьи */
+.article-title {
+    color: var(--text-primary);
+}
+
+.article-meta {
+    color: var(--text-secondary);
+}
+
+.article-navigation-title {
+    color: var(--text-primary);
+}
+
+.article-navigation-title:hover {
+    color: var(--accent-primary);
+}
+
+.comment-section-title {
+    color: var(--text-primary);
+}
+
+.comment-input {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+}
+
+.comment-input:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+}
+
+/* Унифицированные стили для темной темы */
+.dark .article-title,
+.dark .article-navigation-title,
+.dark .comment-section-title {
+    color: var(--text-primary);
+}
+
+.dark .article-meta {
+    color: var(--text-secondary);
+}
+
+.dark .comment-input {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--border-light);
+} 
