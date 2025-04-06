@@ -12,7 +12,7 @@ services:
     depends_on:
       - backend
     environment:
-      - REACT_APP_API_URL=http://localhost:5000/api
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
 
   backend:
     container_name: dmishanin-backend
@@ -26,14 +26,14 @@ services:
       db:
         condition: service_healthy
     environment:
-      - NODE_ENV=development
-      - PORT=5000
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USER=dmishanin
-      - DB_PASSWORD=password
-      - DB_NAME=dmishanin_db
-      - JWT_SECRET=your_jwt_secret
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
 
   db:
     container_name: dmishanin-db
@@ -45,12 +45,12 @@ services:
       - ./server/init-db.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=root_password
-      - MYSQL_DATABASE=dmishanin_db
-      - MYSQL_USER=dmishanin
-      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "dmishanin", "-ppassword"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
       interval: 5s
       timeout: 5s
       retries: 5
