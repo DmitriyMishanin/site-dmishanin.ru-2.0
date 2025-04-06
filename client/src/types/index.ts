@@ -13,11 +13,10 @@ export interface User {
 export interface Article {
   id: number;
   title: string;
+  description: string;
   content: string;
-  authorId: number;
-  author?: User;
-  visibility: 'public' | 'premium' | 'private';
-  createdAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // Типы для проектов
@@ -25,8 +24,10 @@ export interface Project {
   id: number;
   title: string;
   description: string;
-  links: string[];
-  createdAt: string;
+  content: string;
+  imageUrl: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // Типы для комментариев
@@ -55,4 +56,12 @@ export interface LoginCredentials {
 
 export interface RegisterCredentials extends LoginCredentials {
   name: string;
+}
+
+export interface ArticleCardProps {
+  article: Article;
+}
+
+export interface ProjectCardProps {
+  project: Project;
 } 

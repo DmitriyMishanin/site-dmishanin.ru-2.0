@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import imageAvatar from '../assets/image_avatar.png';
 
 interface HeroSectionProps {
@@ -36,15 +37,18 @@ const HeroSection: React.FC<HeroSectionProps> = ({ openLoginModal }) => {
                 Мини пространство для <span className="accent-text font-medium">идей</span>, <span className="accent-text font-medium">проектов</span> и обмена знаниями с единомышленниками
               </p>
               <div className="flex space-x-4 hero-buttons">
-                <button 
+                <button
                   onClick={openLoginModal}
-                  className="px-6 py-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   Войти
                 </button>
-                <a href="#about" className="px-6 py-3 rounded-full btn-primary hover:shadow-md">
-                  О портале
-                </a>
+                <Link
+                  to="/articles"
+                  className="px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  Статьи
+                </Link>
               </div>
             </div>
           </section>

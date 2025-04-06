@@ -1,4 +1,4 @@
-import { Model, DataTypes, Optional } from 'sequelize';
+import { Model, DataTypes } from 'sequelize';
 import sequelize from '../config/db';
 import User from './User';
 
@@ -8,25 +8,24 @@ interface ProjectAttributes {
   title: string;
   description: string;
   imageUrl?: string;
-  links: string[];
-  tags?: string[];
+  demoUrl?: string;
+  githubUrl?: string;
   authorId: number;
+  visibility: 'public' | 'private';
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-// Определение интерфейса для создания нового проекта
-export interface ProjectCreationAttributes extends Optional<ProjectAttributes, 'id' | 'createdAt' | 'updatedAt' | 'imageUrl' | 'tags'> {}
-
 // Определение класса модели Project
-class Project extends Model<ProjectAttributes, ProjectCreationAttributes> {
+class Project extends Model<ProjectAttributes> {
   public id!: number;
   public title!: string;
   public description!: string;
-  public imageUrl!: string;
-  public links!: string[];
-  public tags!: string[];
+  public imageUrl!: string | null;
+  public demoUrl!: string | null;
+  public githubUrl!: string | null;
   public authorId!: number;
+  public visibility!: 'public' | 'private';
   
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -41,7 +40,7 @@ Project.init(
       primaryKey: true
     },
     title: {
-      type: DataTypes.STRING(200),
+      type: DataTypes.STRING,
       allowNull: false
     },
     description: {
@@ -52,23 +51,21 @@ Project.init(
       type: DataTypes.STRING,
       allowNull: true
     },
-    links: {
-      type: DataTypes.JSON,
-      allowNull: false,
-      defaultValue: []
+    demoUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
-    tags: {
-      type: DataTypes.JSON,
-      allowNull: true,
-      defaultValue: []
+    githubUrl: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     authorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      }
+    },
+    visibility: {
+      type: DataTypes.ENUM('public', 'private'),
+      defaultValue: 'public',
     },
     createdAt: {
       type: DataTypes.DATE,

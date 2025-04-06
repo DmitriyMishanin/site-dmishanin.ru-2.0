@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import HeroSection from '../components/HeroSection';
 import LoginModal from '../components/LoginModal';
+import { Article, getArticles } from '../api/articles';
+import { Project, getProjects } from '../api/projects';
 
 const HomePage: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -15,6 +21,36 @@ const HomePage: React.FC = () => {
     setIsLoginModalOpen(false);
     document.body.style.overflow = '';
   };
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const data = await getArticles();
+        setArticles(data);
+      } catch (err) {
+        console.error('Ошибка при загрузке статей:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await getProjects();
+        setProjects(data);
+      } catch (err) {
+        console.error('Ошибка при загрузке проектов:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <MainLayout>
@@ -49,114 +85,88 @@ const HomePage: React.FC = () => {
       </section>
       
       {/* Articles Section */}
-      <section id="articles" className="py-16">
-        <div className="container">
-          <h2 className="section-title">
-            Статьи
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="card">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Введение в React Hooks</h3>
-                <p className="mb-4">Детальный обзор хуков в React и примеры их использования</p>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <span className="role-badge role-core">Автор</span>
-                    <span className="date">01.04.2024</span>
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">Статьи</h2>
+            <Link 
+              to="/articles"
+              className="text-light-accent hover:text-light-accent/80 dark:text-dark-accent dark:hover:text-dark-accent/80"
+            >
+              Все статьи →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {loading ? (
+              <div>Загрузка статей...</div>
+            ) : (
+              articles.slice(0, 3).map((article) => (
+                <div key={article.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">{article.excerpt}</p>
+                    <div className="flex items-center justify-between">
+                      <span className={`role-badge role-${article.author.role}`}>{article.author.name}</span>
+                      <Link 
+                        to={`/articles/${article.id}`}
+                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                      >
+                        Читать →
+                      </Link>
+                    </div>
                   </div>
-                  <button className="card-link" onClick={() => window.location.href = '/article.html'}>Читать →</button>
                 </div>
-              </div>
-            </div>
-            <div className="card">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">CSS-анимации: от простого к сложному</h3>
-                <p className="mb-4">Полное руководство по созданию современных анимаций на CSS</p>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <span className="role-badge role-core">Автор</span>
-                    <span className="date">28.03.2024</span>
-                  </div>
-                  <button className="card-link" onClick={() => window.location.href = '/article.html'}>Читать →</button>
-                </div>
-              </div>
-            </div>
-            <div className="card">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">TypeScript: типизация в React</h3>
-                <p className="mb-4">Практическое руководство по использованию TypeScript в React-приложениях</p>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <span className="role-badge role-core">Автор</span>
-                    <span className="date">25.03.2024</span>
-                  </div>
-                  <button className="card-link" onClick={() => window.location.href = '/article.html'}>Читать →</button>
-                </div>
-              </div>
-            </div>
-            <div className="card">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Tailwind CSS: современный подход к стилизации</h3>
-                <p className="mb-4">Как использовать Tailwind CSS для быстрой разработки интерфейсов</p>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    <span className="role-badge role-core">Автор</span>
-                    <span className="date">22.03.2024</span>
-                  </div>
-                  <button className="card-link" onClick={() => window.location.href = '/article.html'}>Читать →</button>
-                </div>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-16">
-        <div className="container">
-          <h2 className="section-title">
-            Проекты
-          </h2>
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">Проекты</h2>
+            <Link 
+              to="/projects"
+              className="text-light-accent hover:text-light-accent/80 dark:text-dark-accent dark:hover:text-dark-accent/80"
+            >
+              Все проекты →
+            </Link>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="card">
-              <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80" 
-                   alt="React Dashboard Preview" 
-                   className="w-full h-48 object-cover" />
-              <div>
-                <h3 className="text-xl font-semibold mb-2">React Dashboard</h3>
-                <p className="mb-4">Панель управления с аналитикой и визуализацией данных</p>
-                <div className="flex justify-between items-center">
-                  <span className="role-badge role-core">Автор</span>
-                  <button className="card-link" onClick={() => window.location.href = '/projects/react-dashboard'}>Подробнее →</button>
+            {loading ? (
+              <div>Загрузка проектов...</div>
+            ) : (
+              projects.slice(0, 3).map((project) => (
+                <div key={project.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+                  {project.imageUrl && (
+                    <img 
+                      src={project.imageUrl} 
+                      alt={project.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  )}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">
+                      {project.description.substring(0, 100)}...
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <span className={`role-badge role-${project.author.role}`}>
+                        {project.author.name}
+                      </span>
+                      <Link 
+                        to={`/projects/${project.id}`}
+                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+                      >
+                        Подробнее →
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="card">
-              <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=800&auto=format&fit=crop&q=80" 
-                   alt="CSS Animation Library Preview" 
-                   className="w-full h-48 object-cover" />
-              <div>
-                <h3 className="text-xl font-semibold mb-2">CSS Animation Library</h3>
-                <p className="mb-4">Библиотека готовых анимаций для веб-проектов</p>
-                <div className="flex justify-between items-center">
-                  <span className="role-badge role-core">Автор</span>
-                  <button className="card-link" onClick={() => window.location.href = '/projects/css-animation-library'}>Подробнее →</button>
-                </div>
-              </div>
-            </div>
-            <div className="card">
-              <img src="https://images.unsplash.com/photo-1517134191118-9d595e4c8c2b?w=800&auto=format&fit=crop&q=80" 
-                   alt="TypeScript Boilerplate Preview" 
-                   className="w-full h-48 object-cover" />
-              <div>
-                <h3 className="text-xl font-semibold mb-2">TypeScript Boilerplate</h3>
-                <p className="mb-4">Стартовый шаблон для React-приложений с TypeScript</p>
-                <div className="flex justify-between items-center">
-                  <span className="role-badge role-core">Автор</span>
-                  <button className="card-link" onClick={() => window.location.href = '/projects/typescript-boilerplate'}>Подробнее →</button>
-                </div>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
       </section>
@@ -208,7 +218,7 @@ const HomePage: React.FC = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
                       </svg>
                     </h3>
-                    <p>Документация по псевдоклассу :hover и созданию интерактивных эффектов</p>
+                    <p>Подробное руководство по созданию эффектов при наведении в CSS</p>
                   </div>
                 </div>
               </a>

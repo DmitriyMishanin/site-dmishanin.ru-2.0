@@ -83,14 +83,14 @@ INSERT INTO projects (title, description, imageUrl, links, tags, authorId)
 VALUES 
 ('DMishanin.ru', 
 'Персональный мини-портал для обмена знаниями и идеями. Построен на React, Node.js и MariaDB.', 
-'https://via.placeholder.com/800x450', 
+'/uploads/projects/dmishanin-ru.png', 
 '["https://dmishanin.ru", "https://github.com/dmishanin/dmishanin-ru"]', 
 '["React", "Node.js", "MariaDB", "TailwindCSS"]', 
 1),
 
 ('Проект Таймер', 
 'Приложение для управления временем и повышения продуктивности с техникой Pomodoro.', 
-'https://via.placeholder.com/800x450', 
+'/uploads/projects/timer-app.png', 
 '["https://timer-app.example.com", "https://github.com/dmishanin/timer-app"]', 
 '["React", "Redux", "Firebase"]', 
 1); 

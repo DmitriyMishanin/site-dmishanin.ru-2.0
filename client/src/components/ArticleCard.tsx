@@ -1,52 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ArticleCardProps } from '../types';
 
-export interface ArticleCardProps {
-  id: number;
-  title: string;
-  excerpt: string;
-  author: string;
-  date: string;
-  readTime: string;
-  imageUrl?: string;
-}
+const ArticleCard: React.FC<ArticleCardProps> = ({ article }) => {
+  const getExcerpt = (content: string) => {
+    return content.length > 150 ? content.substring(0, 150) + '...' : content;
+  };
 
-const ArticleCard: React.FC<ArticleCardProps> = ({
-  id,
-  title,
-  excerpt,
-  author,
-  date,
-  readTime,
-  imageUrl
-}) => {
   return (
-    <div className="card transition-all hover:shadow-lg">
-      {imageUrl && (
-        <div className="mb-4 overflow-hidden rounded-lg h-48">
-          <img
-            src={imageUrl}
-            alt={title}
-            className="object-cover w-full h-full transition-transform hover:scale-105"
-          />
-        </div>
-      )}
-      <h3 className="mb-2 text-xl font-bold">
-        <Link
-          to={`/articles/${id}`}
-          className="text-light-text hover:text-light-accent dark:text-dark-text dark:hover:text-dark-accent"
-        >
-          {title}
-        </Link>
-      </h3>
-      <p className="mb-4 text-light-textSecondary dark:text-dark-textSecondary">
-        {excerpt}
-      </p>
-      <div className="flex items-center justify-between text-sm text-light-textSecondary dark:text-dark-textSecondary">
-        <div>{author}</div>
-        <div className="flex items-center space-x-4">
-          <span>{date}</span>
-          <span>{readTime}</span>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2 text-light-text dark:text-dark-text">
+          {article.title}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300 mb-4">
+          {getExcerpt(article.content)}
+        </p>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            {new Date(article.created_at).toLocaleDateString()}
+          </span>
+          <Link 
+            to={`/articles/${article.id}`}
+            className="text-light-accent hover:text-light-accent/80 dark:text-dark-accent dark:hover:text-dark-accent/80"
+          >
+            Читать →
+          </Link>
         </div>
       </div>
     </div>

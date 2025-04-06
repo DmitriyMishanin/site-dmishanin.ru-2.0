@@ -13,6 +13,8 @@ services:
       - backend
     environment:
       - REACT_APP_API_URL=${REACT_APP_API_URL}
+    volumes:
+      - ./server/public/uploads:/usr/share/nginx/html/uploads
 
   backend:
     container_name: dmishanin-backend
@@ -34,6 +36,8 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./server/public/uploads:/app/public/uploads
 
   db:
     container_name: dmishanin-db

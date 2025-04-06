@@ -44,8 +44,22 @@ if not exist "server\node_modules" (
     cd ..
 )
 
+REM Установка дополнительных зависимостей сервера
+echo Установка дополнительных зависимостей сервера...
+cd server
+call npm install multer @types/multer
+cd ..
+
+REM Запуск базы данных в контейнере
+echo Запуск базы данных...
+docker-compose up -d db
+
+REM Ожидание готовности базы данных
+echo Ожидание готовности базы данных...
+timeout /t 10
+
 echo Запуск сервера на порту 5000...
-start cmd /k "cd server && npm run dev"
+start cmd /k "cd server && copy .env.local .env && npm run dev"
 
 echo Запуск клиента на порту 3000...
 start cmd /k "cd client && npm start"

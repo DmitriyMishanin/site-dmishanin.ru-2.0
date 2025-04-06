@@ -5,6 +5,9 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import * as path from 'path';
 import { connectDB } from './config/db';
+import articleRoutes from './routes/articles';
+import projectRoutes from './routes/projects';
+import uploadRoutes from './routes/upload';
 
 // Загрузка переменных окружения
 dotenv.config();
@@ -19,16 +22,17 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Импорт моделей для инициализации
 import './models/User';
 import './models/Article';
 import './models/Project';
 
-// Роуты будут добавлены позже
-// app.use('/api/auth', authRoutes);
-// app.use('/api/articles', articleRoutes);
-// app.use('/api/projects', projectRoutes);
+// Подключение маршрутов
+app.use('/api/articles', articleRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Базовый маршрут для проверки API
 app.get('/api', (req, res) => {

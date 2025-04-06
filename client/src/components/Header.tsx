@@ -49,9 +49,9 @@ const Header: React.FC = () => {
                 dmishanin.ru
               </Link>
               <div className="ml-12 hidden md:flex space-x-6 desktop-menu">
-                <a href="#about">О портале</a>
-                <a href="#projects">Проекты</a>
-                <a href="#articles">Статьи</a>
+                <Link to="/#about">О портале</Link>
+                <Link to="/projects">Проекты</Link>
+                <Link to="/articles">Статьи</Link>
               </div>
             </div>
             <div className="flex items-center space-x-6">
@@ -88,9 +88,9 @@ const Header: React.FC = () => {
           {/* Мобильное меню */}
           <div id="mobile-menu" className={`mobile-menu mt-4 pb-4 ${isMenuOpen ? '' : 'hidden'}`}>
             <div className="flex flex-col space-y-4">
-              <a href="#about">О портале</a>
-              <a href="#projects">Проекты</a>
-              <a href="#articles">Статьи</a>
+              <Link to="/#about">О портале</Link>
+              <Link to="/projects">Проекты</Link>
+              <Link to="/articles">Статьи</Link>
               <button 
                 onClick={openLoginModal}
                 className="px-4 py-2 rounded-full bg-light-accent text-white text-center hover:bg-opacity-90 dark:bg-dark-accent"
