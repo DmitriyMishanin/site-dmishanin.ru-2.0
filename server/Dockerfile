@@ -3,12 +3,12 @@ FROM node:18-alpine as build
 
 # Установка необходимых зависимостей для сборки
 WORKDIR /app
-COPY package*.json ./
+COPY server/package*.json ./
 RUN npm install
 
 # Копирование исходного кода и сборка
-COPY tsconfig.json ./
-COPY src/ ./src/
+COPY server/tsconfig.json ./
+COPY server/src/ ./src/
 COPY .env ./
 RUN npm run build
 
@@ -18,7 +18,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Только необходимые файлы для production
-COPY package*.json ./
+COPY server/package*.json ./
 RUN npm install --only=production
 
 # Копирование скомпилированных файлов из этапа сборки

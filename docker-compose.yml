@@ -4,8 +4,8 @@ services:
   frontend:
     container_name: dmishanin-frontend
     build:
-      context: ./client
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: client/Dockerfile
     ports:
       - "3000:80"
     restart: unless-stopped
@@ -19,8 +19,8 @@ services:
   backend:
     container_name: dmishanin-backend
     build:
-      context: ./server
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: server/Dockerfile
     ports:
       - "5000:5000"
     restart: unless-stopped
