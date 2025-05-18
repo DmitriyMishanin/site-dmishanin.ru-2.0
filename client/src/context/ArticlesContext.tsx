@@ -1,19 +1,20 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
 import { Article } from '../types';
-
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+import { getArticles } from '../api/articles';
+import { useAuth } from './AuthContext';
 
 interface ArticlesContextType {
   articles: Article[];
   loading: boolean;
   error: string | null;
+  refreshArticles: () => Promise<void>;
 }
 
 const ArticlesContext = createContext<ArticlesContextType>({
   articles: [],
   loading: false,
-  error: null
+  error: null,
+  refreshArticles: async () => {}
 });
 
 export const useArticles = () => useContext(ArticlesContext);
@@ -22,26 +23,33 @@ export const ArticlesProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { token, isAuthenticated } = useAuth();
+
+  const refreshArticles = async () => {
+    setLoading(true);
+    try {
+      const data = await getArticles(
+        {}, 
+        isAuthenticated ? token : null, 
+        false
+      );
+      
+      setArticles(data);
+      setError(null);
+    } catch (err) {
+      setError('Ошибка при загрузке статей');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(`${API_URL}/articles`);
-        setArticles(response.data);
-      } catch (err) {
-        setError('Ошибка при загрузке статей');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchArticles();
-  }, []);
+    refreshArticles();
+  }, [token, isAuthenticated]);
 
   return (
-    <ArticlesContext.Provider value={{ articles, loading, error }}>
+    <ArticlesContext.Provider value={{ articles, loading, error, refreshArticles }}>
       {children}
     </ArticlesContext.Provider>
   );

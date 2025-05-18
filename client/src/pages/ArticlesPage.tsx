@@ -45,7 +45,7 @@ const ArticlesPage: React.FC = () => {
             </div>
             {articles.length === 0 && (
               <div className="text-center py-12 text-light-textSecondary dark:text-dark-textSecondary">
-                Статьи пока не добавлены
+                Нет статей для отображения
               </div>
             )}
           </div>

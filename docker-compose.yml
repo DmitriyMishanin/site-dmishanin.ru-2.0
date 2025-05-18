@@ -1,63 +1,26 @@
 version: '3.8'
 
 services:
-  frontend:
-    container_name: dmishanin-frontend
+  smainsite-2:
+    container_name: con-dmishanin-ru-2
     build:
       context: .
       dockerfile: client/Dockerfile
     ports:
       - "3000:80"
-    restart: unless-stopped
-    depends_on:
-      - backend
-    environment:
-      - REACT_APP_API_URL=${REACT_APP_API_URL}
-    volumes:
-      - ./server/public/uploads:/usr/share/nginx/html/uploads
-
-  backend:
-    container_name: dmishanin-backend
-    build:
-      context: .
-      dockerfile: server/Dockerfile
-    ports:
-      - "5000:5000"
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      - NODE_ENV=${NODE_ENV}
-      - PORT=${PORT}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - JWT_SECRET=${JWT_SECRET}
-    volumes:
-      - ./server/public/uploads:/app/public/uploads
-
-  db:
-    container_name: dmishanin-db
-    image: mariadb:10.6
-    ports:
-      - "3306:3306"
-    volumes:
-      - mariadb_data:/var/lib/mysql
-      - ./server/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    expose:
+      - 80
     restart: unless-stopped
     environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - REACT_APP_DIRECTUS_URL=${REACT_APP_DIRECTUS_URL}
+      - REACT_APP_DIRECTUS_TOKEN=${REACT_APP_DIRECTUS_TOKEN}
+    volumes:
+      - ./client/public/uploads:/usr/share/nginx/html/uploads
+    networks:
+      - npm_net
 
-volumes:
-  mariadb_data: 
+networks:
+  npm_net:
+    external: true
+    name: npmnet
+

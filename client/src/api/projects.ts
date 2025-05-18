@@ -1,31 +1,46 @@
-import axios from 'axios';
+import { Project } from '../types';
+import { getItems, getItem } from './directus';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-export interface Project {
-  id: number;
-  title: string;
-  description: string;
-  imageUrl: string | null;
-  demoUrl: string | null;
-  githubUrl: string | null;
-  authorId: number;
-  visibility: 'public' | 'private';
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: number;
-    name: string;
-    role: 'admin' | 'core' | 'member';
-  };
-}
-
-export const getProjects = async (): Promise<Project[]> => {
-  const response = await axios.get(`${API_URL}/projects`);
-  return response.data;
+// Флаг useSystemToken определяет, нужно ли использовать системный токен
+// для административных операций
+export const getProjects = async (
+  params?: Record<string, any>, 
+  token?: string | null, 
+  useSystemToken: boolean = false
+): Promise<Project[]> => {
+  return getItems<Project>('projects', {
+    filter: {
+      status: {
+        _eq: 'published'
+      },
+      ...params?.filter
+    },
+    ...params
+  }, token, useSystemToken);
 };
 
-export const getProjectById = async (id: number): Promise<Project> => {
-  const response = await axios.get(`${API_URL}/projects/${id}`);
-  return response.data;
+export const getProjectById = async (
+  id: number, 
+  token?: string | null, 
+  useSystemToken: boolean = false
+): Promise<Project> => {
+  return getItem<Project>('projects', id, undefined, token, useSystemToken);
+};
+
+export const getProjectBySlug = async (
+  slug: string, 
+  token?: string | null, 
+  useSystemToken: boolean = false
+): Promise<Project> => {
+  const projects = await getItems<Project>('projects', {
+    filter: {
+      slug: {
+        _eq: slug
+      },
+      status: {
+        _eq: 'published'
+      }
+    }
+  }, token, useSystemToken);
+  return projects[0];
 }; 

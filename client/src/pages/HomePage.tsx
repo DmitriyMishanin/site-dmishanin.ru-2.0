@@ -3,14 +3,21 @@ import { Link } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import HeroSection from '../components/HeroSection';
 import LoginModal from '../components/LoginModal';
-import { Article, getArticles } from '../api/articles';
-import { Project, getProjects } from '../api/projects';
+import { Article } from '../types';
+import { getArticles } from '../api/articles';
+import { Project } from '../types';
+import { getProjects } from '../api/projects';
+import { getAssetUrl } from '../api/directus';
+import ProjectCard from '../components/ProjectCard';
+import ArticleCard from '../components/ArticleCard';
+import { useAuth } from '../context/AuthContext';
 
 const HomePage: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [articles, setArticles] = useState<Article[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const { token, isAuthenticated } = useAuth();
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -22,42 +29,42 @@ const HomePage: React.FC = () => {
     document.body.style.overflow = '';
   };
 
+  // Загрузка данных при монтировании или изменении статуса авторизации
   useEffect(() => {
-    const fetchArticles = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
-        const data = await getArticles();
-        setArticles(data);
+        // Загрузка статей
+        const articlesData = await getArticles(
+          {}, 
+          isAuthenticated ? token : null,
+          false
+        );
+        setArticles(articlesData);
+        
+        // Загрузка проектов
+        const projectsData = await getProjects(
+          {},
+          isAuthenticated ? token : null,
+          false
+        );
+        setProjects(projectsData);
       } catch (err) {
-        console.error('Ошибка при загрузке статей:', err);
+        console.error('Ошибка при загрузке данных:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchArticles();
-  }, []);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const data = await getProjects();
-        setProjects(data);
-      } catch (err) {
-        console.error('Ошибка при загрузке проектов:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+    fetchData();
+  }, [token, isAuthenticated]); // Зависимость от статуса авторизации
 
   return (
     <MainLayout>
-      <HeroSection openLoginModal={openLoginModal} />
+      <HeroSection onLoginClick={openLoginModal} />
 
       {/* About Me Section */}
-      <section id="about" className="py-16">
+      <section id="about" className="py-8">
         <div className="container">
           <h2 className="section-title">
             О портале
@@ -77,7 +84,7 @@ const HomePage: React.FC = () => {
                 <li>Пространство для обсуждений и обмена идеями</li>
               </ul>
               <p className="mt-4 italic">
-                Доступ к порталу предоставляется только по приглашениям. Если вы хотите присоединиться к сообществу, свяжитесь со мной.
+                Доступ к закрытой части портала предоставляется только по приглашениям. Если вы хотите присоединиться к сообществу, свяжитесь с автором.
               </p>
             </div>
           </div>
@@ -85,10 +92,10 @@ const HomePage: React.FC = () => {
       </section>
       
       {/* Articles Section */}
-      <section className="py-16">
+      <section className="py-8">
         <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Статьи</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="section-title">Мини-статьи</h2>
             <Link 
               to="/articles"
               className="text-light-accent hover:text-light-accent/80 dark:text-dark-accent dark:hover:text-dark-accent/80"
@@ -99,34 +106,26 @@ const HomePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
               <div>Загрузка статей...</div>
-            ) : (
+            ) : articles.length > 0 ? (
               articles.slice(0, 3).map((article) => (
-                <div key={article.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{article.excerpt}</p>
-                    <div className="flex items-center justify-between">
-                      <span className={`role-badge role-${article.author.role}`}>{article.author.name}</span>
-                      <Link 
-                        to={`/articles/${article.id}`}
-                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
-                      >
-                        Читать →
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                <ArticleCard key={article.id} article={article} />
               ))
+            ) : (
+              <div className="col-span-3 text-center py-2 text-gray-500">
+                {isAuthenticated 
+                  ? "У вас нет доступа к статьям или статьи отсутствуют"
+                  : "Доступных статей нет. Авторизуйтесь для просмотра"}
+              </div>
             )}
           </div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section className="py-16">
+      <section className="py-8">
         <div className="container mx-auto px-6">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Проекты</h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="section-title">Мини-проекты</h2>
             <Link 
               to="/projects"
               className="text-light-accent hover:text-light-accent/80 dark:text-dark-accent dark:hover:text-dark-accent/80"
@@ -137,35 +136,16 @@ const HomePage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
               <div>Загрузка проектов...</div>
-            ) : (
+            ) : projects.length > 0 ? (
               projects.slice(0, 3).map((project) => (
-                <div key={project.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-                  {project.imageUrl && (
-                    <img 
-                      src={project.imageUrl} 
-                      alt={project.title}
-                      className="w-full h-48 object-cover"
-                    />
-                  )}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">
-                      {project.description.substring(0, 100)}...
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className={`role-badge role-${project.author.role}`}>
-                        {project.author.name}
-                      </span>
-                      <Link 
-                        to={`/projects/${project.id}`}
-                        className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
-                      >
-                        Подробнее →
-                      </Link>
-                    </div>
-                  </div>
-                </div>
+                <ProjectCard key={project.id} project={project} />
               ))
+            ) : (
+              <div className="col-span-3 text-center py-2 text-gray-500">
+                {isAuthenticated 
+                  ? "У вас нет доступа к проектам или проекты отсутствуют"
+                  : "Доступных проектов нет. Авторизуйтесь для просмотра"}
+              </div>
             )}
           </div>
         </div>
@@ -228,9 +208,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Модальное окно входа */}
-      {isLoginModalOpen && (
-        <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-      )}
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
     </MainLayout>
   );
 };

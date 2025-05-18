@@ -1,31 +1,46 @@
-import axios from 'axios';
+import { Article } from '../types';
+import { getItems, getItem } from './directus';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
-export interface Article {
-  id: number;
-  title: string;
-  content: string;
-  excerpt: string;
-  authorId: number;
-  imageUrl: string | null;
-  visibility: 'public' | 'private';
-  readTime: string;
-  createdAt: string;
-  updatedAt: string;
-  author: {
-    id: number;
-    name: string;
-    role: 'admin' | 'core' | 'member';
-  };
-}
-
-export const getArticles = async (): Promise<Article[]> => {
-  const response = await axios.get(`${API_URL}/articles`);
-  return response.data;
+// Флаг useSystemToken определяет, нужно ли использовать системный токен
+// для административных операций
+export const getArticles = async (
+  params?: Record<string, any>, 
+  token?: string | null, 
+  useSystemToken: boolean = false
+): Promise<Article[]> => {
+  return getItems<Article>('articles', {
+    filter: {
+      status: {
+        _eq: 'published'
+      },
+      ...params?.filter
+    },
+    ...params
+  }, token, useSystemToken);
 };
 
-export const getArticleById = async (id: number): Promise<Article> => {
-  const response = await axios.get(`${API_URL}/articles/${id}`);
-  return response.data;
+export const getArticleById = async (
+  id: number, 
+  token?: string | null, 
+  useSystemToken: boolean = false
+): Promise<Article> => {
+  return getItem<Article>('articles', id, undefined, token, useSystemToken);
+};
+
+export const getArticleBySlug = async (
+  slug: string, 
+  token?: string | null, 
+  useSystemToken: boolean = false
+): Promise<Article> => {
+  const articles = await getItems<Article>('articles', {
+    filter: {
+      slug: {
+        _eq: slug
+      },
+      status: {
+        _eq: 'published'
+      }
+    }
+  }, token, useSystemToken);
+  return articles[0];
 }; 

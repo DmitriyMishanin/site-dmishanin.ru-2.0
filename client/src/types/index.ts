@@ -1,33 +1,51 @@
 // Типы пользователей
-export type UserRole = 'admin' | 'author' | 'premium_reader' | 'reader';
+export type UserRole = 'Administrator' | 'Премиум' | 'Приватный' | 'Автор';
 
 export interface User {
-  id: number;
-  name: string;
+  id: string;
+  first_name: string;
+  last_name: string;
   email: string;
   role: UserRole;
-  createdAt: string;
+  date_created: string;
 }
 
 // Типы для статей
 export interface Article {
   id: number;
+  status: 'published' | 'draft' | 'archived';
   title: string;
-  description: string;
+  slug: string;
+  excerpt: string;
   content: string;
-  created_at: string;
-  updated_at: string;
+  image: string | null;
+  visibility: 'public' | 'premium' | 'private';
+  readTime: string | null;
+  author_id: string;
+  date_created: string;
+  date_updated: string;
+  user_created: string;
+  user_updated: string;
+  author?: User;
 }
 
 // Типы для проектов
 export interface Project {
   id: number;
+  status: 'published' | 'draft' | 'archived';
   title: string;
+  slug: string;
   description: string;
-  content: string;
-  imageUrl: string;
-  created_at: string;
-  updated_at: string;
+  image: string | null;
+  demoUrl: string | null;
+  githubUrl: string | null;
+  visibility: 'public' | 'private';
+  author_id: string;
+  date_created: string;
+  date_updated: string;
+  user_created: string;
+  user_updated: string;
+  author?: User;
 }
 
 // Типы для комментариев
@@ -44,6 +62,7 @@ export interface Comment {
 export interface AuthState {
   user: User | null;
   token: string | null;
+  refreshToken: string | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -55,7 +74,14 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials extends LoginCredentials {
-  name: string;
+  first_name: string;
+  last_name: string;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  expires: number;
+  refresh_token: string;
 }
 
 export interface ArticleCardProps {

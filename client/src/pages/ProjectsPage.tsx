@@ -45,7 +45,7 @@ const ProjectsPage: React.FC = () => {
             </div>
             {projects.length === 0 && (
               <div className="text-center py-12 text-light-textSecondary dark:text-dark-textSecondary">
-                Проекты пока не добавлены
+                Нет проектов для отображения
               </div>
             )}
           </div>

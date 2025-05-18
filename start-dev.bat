@@ -20,14 +20,6 @@ if %ERRORLEVEL% neq 0 (
     exit /b 1
 )
 
-REM Проверка MariaDB
-where mysql >nul 2>nul
-if %ERRORLEVEL% neq 0 (
-    echo Предупреждение: MariaDB не установлен
-    echo Установите MariaDB с https://mariadb.org/
-    echo.
-)
-
 REM Проверка зависимостей клиента
 if not exist "client\node_modules" (
     echo Установка зависимостей клиента...
@@ -36,37 +28,15 @@ if not exist "client\node_modules" (
     cd ..
 )
 
-REM Проверка зависимостей сервера
-if not exist "server\node_modules" (
-    echo Установка зависимостей сервера...
-    cd server
-    call npm install
-    cd ..
-)
-
-REM Установка дополнительных зависимостей сервера
-echo Установка дополнительных зависимостей сервера...
-cd server
-call npm install multer @types/multer
-cd ..
-
-REM Запуск базы данных в контейнере
-echo Запуск базы данных...
-docker-compose up -d db
-
-REM Ожидание готовности базы данных
-echo Ожидание готовности базы данных...
-timeout /t 10
-
-echo Запуск сервера на порту 5000...
-start cmd /k "cd server && copy .env.local .env && npm run dev"
+REM Копируем .env в клиентскую часть
+copy .env client\.env
 
 echo Запуск клиента на порту 3000...
 start cmd /k "cd client && npm start"
 
 echo.
-echo Сервер: http://localhost:5000/api
 echo Клиент: http://localhost:3000/
+echo Directus: https://directus.dmishanin.ru
 echo.
-echo Для остановки нажмите Ctrl+C в каждом окне
+echo Для остановки нажмите Ctrl+C в окне
 echo. 
